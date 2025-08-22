@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Timely™</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #2d1b69 100%);
+            color: #e6e6e6;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 4px 30px rgba(212, 175, 55, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #d4af37;
+            letter-spacing: 1px;
+        }
+        
+        .logo img {
+            height: 35px;
+            width: auto;
+            filter: brightness(1.2) contrast(1.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            padding: 60px;
+            border-radius: 25px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(66, 153, 225, 0.4);
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .welcome-section::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .welcome-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+            color: #e6e6e6;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.08);
+        }
+        
+        .card h2 {
+            color: #d4af37;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        
+        .timetables-container {
+            max-height: 500px;
+            overflow: auto;
+            border-radius: 12px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .timetables-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        .timetables-container::-webkit-scrollbar-track {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 6px;
+        }
+        
+        .timetables-container::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.5);
+            border-radius: 6px;
+        }
+        
+        .section-timetable {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .section-timetable:last-child {
+            border-bottom: none;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .section-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(8, 1fr);
+            gap: 1px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .loading-message {
+            text-align: center;
+            padding: 40px;
+            color: rgba(212, 175, 55, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        .schedule-header {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        
+        .schedule-time {
+            background: linear-gradient(135deg, #718096, #4a5568);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .schedule-cell {
+            background: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .schedule-cell.occupied {
+            background: linear-gradient(135deg, #ebf8ff, #e6fffa);
+            border-left: 4px solid #3182ce;
+        }
+        
+        .schedule-cell.lunch {
+            background: linear-gradient(135deg, #fef5e7, #fed7aa);
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .subject-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 2px;
+        }
+        
+        .class-info {
+            color: #718096;
+            font-size: 0.7rem;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .next-class {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .next-class h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .next-class .time {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .next-class .subject {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .today-schedule {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .class-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .class-item:last-child {
+            border-bottom: none;
+        }
+        
+        .class-time {
+            background: #3182ce;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .class-details {
+            flex: 1;
+        }
+        
+        .class-details h4 {
+            color: #2d3748;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .class-details p {
+            color: #718096;
+            font-size: 0.8rem;
+        }
+        
+        .semester-info {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .semester-info h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3182ce;
+            margin-bottom: 5px;
+        }
+        
+        .info-label {
+            color: #718096;
+            font-size: 0.8rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #3182ce;
+            color: white;
+            border-color: #3182ce;
+            text-decoration: none;
+        }
+        
+        .announcements {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .announcement-item {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .announcement-item:hover {
+            background: rgba(212, 175, 55, 0.12);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .announcement-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .announcement-item h4 {
+            color: #d4af37;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .announcement-item h4::before {
+            content: '•';
+            color: #d4af37;
+            font-size: 1.2rem;
+        }
+        
+        .announcement-item p {
+            color: rgba(230, 230, 230, 0.9);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .announcement-date {
+            color: rgba(212, 175, 55, 0.7);
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .announcement-date::before {
+            content: '🕒';
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-content h1 {
+                font-size: 2rem;
+            }
+            
+            .schedule-grid {
+                font-size: 0.7rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="https://lh3.googleusercontent.com/d/1LBhx-x_Si1-cmGqsRAVmheoz0tXvJ3UN" alt="HITK Logo">
+                <img src="https://lh3.googleusercontent.com/d/1gKfAWyddOwKCGFVO69ZRUh3du4E8CX9l" alt="Sync Logo">
+                Timely<sup style="font-size: 0.5em;">™</sup>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">
+                    {% if session.avatar_url %}
+                        <img src="{{ session.avatar_url }}" alt="Profile Picture">
+                    {% else %}
+                        {{ session.name[0] if session.name else 'U' }}
+                    {% endif %}
+                </div>
+                <span style="color: #e6e6e6; font-weight: 500;" id="userName">{{ session.name or 'User' }}</span>
+                <div class="nav-links">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <h1>Hello, {{ session.name.split()[0] if session.name else 'Student' }}!</h1>
+                <p>Your personalized class schedule and academic overview</p>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="main-content">
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-calendar-week"></i>
+                        All Department Timetables
+                    </h2>
+                    <div class="timetables-container" id="timetablesContainer">
+                        <div class="loading-message">
+                            <i class="fas fa-spinner fa-spin"></i> Loading timetables...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="next-class">
+                    <h3>Next Class</h3>
+                    <div class="time">2:00 PM</div>
+                    <div class="subject">Mathematics</div>
+                    <p style="margin-top: 10px; opacity: 0.8;">Prof. Smith • Room 101</p>
+                </div>
+
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-graduation-cap"></i>
+                        Semester Info
+                    </h2>
+                    <div class="semester-info">
+                        <h3>
+                            <i class="fas fa-calendar-alt"></i>
+                            Semester 5 - Fall 2024
+                        </h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-value">6</div>
+                                <div class="info-label">Subjects</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-value">24</div>
+                                <div class="info-label">Credits</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-value">18</div>
+                                <div class="info-label">Classes/Week</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-value">8.5</div>
+                                <div class="info-label">GPA</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <a href="/download-timetable" class="action-btn">
+                            <i class="fas fa-download"></i>
+                            Download Schedule
+                        </a>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-bell"></i>
+                            Class Reminders
+                        </a>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-calendar-plus"></i>
+                            Add to Calendar
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-bullhorn"></i>
+                        Notice Board
+                        <span id="noticeIndicator" style="
+                            background: #48bb78; color: white; font-size: 0.7rem;
+                            padding: 4px 8px; border-radius: 12px; margin-left: 10px;
+                            display: none;
+                        ">NEW</span>
+                    </h2>
+                    <div class="announcements" id="noticesContainer">
+                        <div class="announcement-item">
+                            <h4>No notices available</h4>
+                            <p>Check back later for updates from the department.</p>
+                            <div class="announcement-date">No updates</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Load notices from notice board
+        function loadNotices() {
+            fetch('/api/notices')
+                .then(r => r.json())
+                .then(notices => {
+                    const container = document.getElementById('noticesContainer');
+                    const indicator = document.getElementById('noticeIndicator');
+                    
+                    if (notices.length === 0) {
+                        container.innerHTML = `
+                            <div class="announcement-item">
+                                <h4>No notices available</h4>
+                                <p>Check back later for updates from the department.</p>
+                                <div class="announcement-date">No updates</div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Show NEW indicator if there are notices
+                    indicator.style.display = 'inline-block';
+                    
+                    container.innerHTML = notices.map(notice => {
+                        const date = new Date(notice.published_at);
+                        const timeAgo = getTimeAgo(date);
+                        const icon = notice.type === 'timetable' ? '📅' : '📢';
+                        
+                        return `
+                            <div class="announcement-item">
+                                <h4>${icon} ${notice.title}</h4>
+                                <p>${notice.content}</p>
+                                <div class="announcement-date">
+                                    ${timeAgo} • by ${notice.published_by}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                })
+                .catch(e => {
+                    console.error('Error loading notices:', e);
+                    document.getElementById('noticesContainer').innerHTML = `
+                        <div class="announcement-item">
+                            <h4>Error loading notices</h4>
+                            <p>Unable to fetch latest updates. Please refresh the page.</p>
+                            <div class="announcement-date">Error</div>
+                        </div>
+                    `;
+                });
+        }
+        
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSecs = Math.floor(diffMs / 1000);
+            const diffMins = Math.floor(diffSecs / 60);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (diffSecs < 60) return `${diffSecs} seconds ago`;
+            if (diffMins < 60) return `${diffMins} minutes ago`;
+            if (diffHours < 24) return `${diffHours} hours ago`;
+            if (diffDays === 1) return '1 day ago';
+            return `${diffDays} days ago`;
+        }
+        
+        // Load real timetable data
+        function loadTimetable() {
+            fetch('/api/student-timetable')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.sections) {
+                        displayAllSections(data.sections);
+                    } else {
+                        document.getElementById('timetablesContainer').innerHTML = `
+                            <div class="loading-message">
+                                <i class="fas fa-exclamation-triangle"></i> No timetables found
+                            </div>
+                        `;
+                    }
+                })
+                .catch(e => {
+                    console.error('Error loading timetable:', e);
+                    document.getElementById('timetablesContainer').innerHTML = `
+                        <div class="loading-message">
+                            <i class="fas fa-times-circle"></i> Error loading timetables
+                        </div>
+                    `;
+                });
+        }
+        
+        function displayAllSections(sections) {
+            const container = document.getElementById('timetablesContainer');
+            const timeSlots = ['09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00', '15:00-16:00', '16:00-17:00'];
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+            const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            
+            let html = '';
+            
+            sections.forEach(section => {
+                html += `
+                    <div class="section-timetable">
+                        <div class="section-header">
+                            <div class="section-title">${section.dept_name} (${section.dept_code}) - Year ${section.year_number}, Section ${section.section_label}</div>
+                            <div class="section-subtitle">Semester ${section.semester_number}</div>
+                        </div>
+                        
+                        <div class="schedule-grid">
+                            <div class="schedule-header">Day</div>
+                            ${timeSlots.map(slot => `<div class="schedule-header">${slot.replace('-', ' - ')}</div>`).join('')}
+                `;
+                
+                // Add rows for each day
+                days.forEach((day, dayIndex) => {
+                    // First column: Day name
+                    html += `<div class="schedule-time">${dayNames[dayIndex]}</div>`;
+                    
+                    // Remaining columns: Time slots
+                    timeSlots.forEach(slot => {
+                        if (slot === '12:00-13:00') {
+                            html += `
+                                <div class="schedule-cell lunch">
+                                    <div class="subject-name">LUNCH</div>
+                                </div>
+                            `;
+                        } else if (section.schedule[day] && section.schedule[day][slot]) {
+                            const classData = section.schedule[day][slot];
+                            html += `
+                                <div class="schedule-cell occupied">
+                                    <div class="subject-name">${classData.subject}</div>
+                                    <div class="class-info">${classData.teacher}<br/>${classData.room}</div>
+                                </div>
+                            `;
+                        } else {
+                            html += `<div class="schedule-cell">Free</div>`;
+                        }
+                    });
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Load notices on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotices();
+            loadTimetable();
+        });
+        
+        // Refresh notices every 30 seconds
+        setInterval(loadNotices, 30000);
+    </script>
+</body>
+</html>

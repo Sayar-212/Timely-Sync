@@ -1,0 +1,5 @@
+google-generativeai
+ortools
+pydantic
+reportlab
+pytest

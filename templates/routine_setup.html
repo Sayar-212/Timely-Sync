@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routine Setup - Timetable Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="/">Timetable Generator</a>
+                        <div class="navbar-nav ms-auto">
+                            <a class="nav-link" href="/dashboard">Dashboard</a>
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="container mt-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Routine Generator Setup</h1>
+                    </div>
+
+                    <!-- Setup Progress -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Setup Progress</h6>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="setupProgress" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-muted" id="progressText">Step 1 of 4: Department Configuration</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Department Configuration -->
+                    <div class="card mb-4" id="step1">
+                        <div class="card-header">
+                            <h5><i class="fas fa-university me-2"></i>Step 1: Department & Program Configuration</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="departmentForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Department Name</label>
+                                            <input type="text" class="form-control" id="deptName" placeholder="Computer Science Engineering" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Department Code</label>
+                                            <input type="text" class="form-control" id="deptCode" placeholder="CSE" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="form-label">Program Duration</label>
+                                            <select class="form-select" id="programDuration" required>
+                                                <option value="">Select Program</option>
+                                                <option value="2">M.Tech (2 Years)</option>
+                                                <option value="3">BCA/MCA (3 Years)</option>
+                                                <option value="4">B.Tech (4 Years)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mt-4">Section Structure per Year</h6>
+                                <div class="row" id="sectionInputs">
+                                    <!-- Dynamic section inputs will be added here -->
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button type="submit" class="btn btn-primary">Save Department Configuration</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Infrastructure Setup -->
+                    <div class="card mb-4" id="step2" style="display: none;">
+                        <div class="card-header">
+                            <h5><i class="fas fa-building me-2"></i>Step 2: Infrastructure Setup</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="roomsForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Theory Rooms</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label">Number of Theory Rooms</label>
+                                            <input type="number" class="form-control" id="theoryRoomCount" min="1" required>
+                                            <small class="text-muted">Minimum required: <span id="minTheoryRooms">0</span></small>
+                                        </div>
+                                        <div id="theoryRoomInputs"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Lab Rooms</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label">Number of Lab Rooms</label>
+                                            <input type="number" class="form-control" id="labRoomCount" min="1" required>
+                                        </div>
+                                        <div id="labRoomInputs"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button type="submit" class="btn btn-primary">Save Infrastructure</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Semester & Subject Configuration -->
+                    <div class="card mb-4" id="step3" style="display: none;">
+                        <div class="card-header">
+                            <h5><i class="fas fa-calendar-alt me-2"></i>Step 3: Semester & Subject Configuration</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6>Semester Selection</h6>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="semesterType" id="oddSemester" value="odd">
+                                            <label class="form-check-label" for="oddSemester">
+                                                Odd Semester (1, 3, 5, 7)
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="semesterType" id="evenSemester" value="even">
+                                            <label class="form-check-label" for="evenSemester">
+                                                Even Semester (2, 4, 6, 8)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="setupSemesters()">Setup Semesters</button>
+                                    
+                                    <div class="mt-4" id="semesterList">
+                                        <!-- Semester list will be populated here -->
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <button class="btn btn-success" onclick="nextStep()" style="display: none;" id="proceedBtn">
+                                            <i class="fas fa-arrow-right me-2"></i>Proceed to Final Review
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-8">
+                                    <div id="subjectConfiguration" style="display: none;">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 id="selectedSemesterTitle">Subject Management</h6>
+                                            <button class="btn btn-success btn-sm" onclick="showAddSubjectModal()">
+                                                <i class="fas fa-plus me-2"></i>Add Subject
+                                            </button>
+                                        </div>
+                                        
+                                        <div id="subjectsList">
+                                            <!-- Subjects will be listed here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Final Review -->
+                    <div class="card mb-4" id="step4" style="display: none;">
+                        <div class="card-header">
+                            <h5><i class="fas fa-check-circle me-2"></i>Step 4: Final Review & Generation</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="finalReview">
+                                <p class="text-success"><i class="fas fa-check-circle me-2"></i>All configurations completed successfully!</p>
+                                <p>System is ready to generate timetables.</p>
+                                <button class="btn btn-primary" onclick="generateTimetables()">Generate Timetables</button>
+                                <a href="/dashboard" class="btn btn-secondary ms-2">Back to Dashboard</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Subject Modal -->
+    <div class="modal fade" id="addSubjectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Subject</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="subjectForm">
+                        <input type="hidden" id="modalSemesterId">
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Subject Name</label>
+                                    <input type="text" class="form-control" id="subjectName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="form-label">Subject Type</label>
+                                    <select class="form-select" id="subjectType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="theory">Theory</option>
+                                        <option value="practical">Practical</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="form-label">Credits (1-4)</label>
+                                    <input type="number" class="form-control" id="subjectCredits" min="1" max="4" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3" id="labDurationDiv" style="display: none;">
+                            <label class="form-label">Lab Duration</label>
+                            <select class="form-select" id="labDuration">
+                                <option value="2">2 Hours</option>
+                                <option value="3">3 Hours</option>
+                            </select>
+                        </div>
+                        
+                        <h6>Teacher Pool</h6>
+                        <div class="mb-3">
+                            <small class="text-muted">Required teachers: <span id="requiredTeachers">0</span></small>
+                        </div>
+                        
+                        <div id="teacherInputs">
+                            <div class="teacher-input mb-2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" placeholder="Teacher Name" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select" required>
+                                            <option value="">Unavailable Day</option>
+                                            <option value="monday">Monday</option>
+                                            <option value="tuesday">Tuesday</option>
+                                            <option value="wednesday">Wednesday</option>
+                                            <option value="thursday">Thursday</option>
+                                            <option value="friday">Friday</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeTeacher(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addTeacher()">
+                            <i class="fas fa-plus me-2"></i>Add Teacher
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveSubject()">Save Subject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let currentStep = 1;
+        let departmentId = null;
+        let currentSemesterId = null;
+        let totalSections = 0;
+
+        $(document).ready(function() {
+            updateProgress();
+            
+            $('#programDuration').change(function() {
+                generateSectionInputs();
+            });
+            
+            setupSubjectTypeHandler();
+            
+            $('#theoryRoomCount').change(function() {
+                generateRoomInputs('theory');
+            });
+            
+            $('#labRoomCount').change(function() {
+                generateRoomInputs('lab');
+            });
+        });
+
+        function updateProgress() {
+            const progress = (currentStep - 1) * 25;
+            $('#setupProgress').css('width', progress + '%');
+            
+            const steps = [
+                'Department Configuration',
+                'Infrastructure Setup', 
+                'Semester & Subject Configuration',
+                'Final Review'
+            ];
+            
+            $('#progressText').text(`Step ${currentStep} of 4: ${steps[currentStep - 1]}`);
+        }
+
+        function generateSectionInputs() {
+            const duration = $('#programDuration').val();
+            const container = $('#sectionInputs');
+            container.empty();
+            
+            totalSections = 0;
+            
+            for (let i = 1; i <= duration; i++) {
+                container.append(`
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Year ${i} Sections</label>
+                            <input type="number" class="form-control section-count" min="1" max="10" 
+                                   data-year="${i}" onchange="updateTotalSections()">
+                        </div>
+                    </div>
+                `);
+            }
+        }
+
+        function updateTotalSections() {
+            totalSections = 0;
+            $('.section-count').each(function() {
+                const count = parseInt($(this).val()) || 0;
+                totalSections += count;
+            });
+            $('#minTheoryRooms').text(totalSections);
+        }
+
+        function generateRoomInputs(type) {
+            const count = $(`#${type}RoomCount`).val();
+            const container = $(`#${type}RoomInputs`);
+            container.empty();
+            
+            for (let i = 1; i <= count; i++) {
+                container.append(`
+                    <div class="mb-2">
+                        <input type="text" class="form-control ${type}-room-name" 
+                               placeholder="${type === 'theory' ? 'Theory' : 'Lab'} Room ${i} Name" required>
+                    </div>
+                `);
+            }
+        }
+
+        $('#departmentForm').submit(function(e) {
+            e.preventDefault();
+            
+            const sections = [];
+            $('.section-count').each(function() {
+                sections.push(parseInt($(this).val()) || 0);
+            });
+            
+            const data = {
+                name: $('#deptName').val(),
+                code: $('#deptCode').val(),
+                duration: parseInt($('#programDuration').val()),
+                sections: sections
+            };
+            
+            $.ajax({
+                url: '/api/save_department',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    if (response.success) {
+                        departmentId = response.department_id;
+                        nextStep();
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                }
+            });
+        });
+
+        $('#roomsForm').submit(function(e) {
+            e.preventDefault();
+            
+            const theoryRooms = [];
+            $('.theory-room-name').each(function() {
+                if ($(this).val()) theoryRooms.push($(this).val());
+            });
+            
+            const labRooms = [];
+            $('.lab-room-name').each(function() {
+                if ($(this).val()) labRooms.push($(this).val());
+            });
+            
+            const data = {
+                theory_rooms: theoryRooms,
+                lab_rooms: labRooms
+            };
+            
+            $.ajax({
+                url: '/api/save_rooms',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    if (response.success) {
+                        nextStep();
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                }
+            });
+        });
+
+        function setupSemesters() {
+            const semesterType = $('input[name="semesterType"]:checked').val();
+            if (!semesterType) {
+                alert('Please select semester type');
+                return;
+            }
+            
+            $.ajax({
+                url: '/api/setup_semester',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    department_id: departmentId,
+                    semester_type: semesterType
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        loadSemesters();
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                }
+            });
+        }
+
+        function loadSemesters() {
+            $.get(`/api/get_semesters/${departmentId}`, function(data) {
+                const container = $('#semesterList');
+                container.empty();
+                
+                data.forEach(function(semester) {
+                    container.append(`
+                        <div class="card mb-2 semester-card" data-semester-id="${semester.id}">
+                            <div class="card-body p-2">
+                                <small class="fw-bold">Year ${semester.year_number} - Semester ${semester.semester_number}</small>
+                                <br>
+                                <small class="text-muted">${semester.section_count} sections</small>
+                                <br>
+                                <button class="btn btn-sm btn-outline-primary mt-1" 
+                                        onclick="selectSemester(${semester.id}, ${semester.year_number}, ${semester.semester_number})">
+                                    Configure Subjects
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                });
+                
+                $('#proceedBtn').show();
+            });
+        }
+
+        function selectSemester(semesterId, yearNumber, semesterNumber) {
+            currentSemesterId = semesterId;
+            $('#selectedSemesterTitle').text(`Year ${yearNumber} - Semester ${semesterNumber} Subjects`);
+            $('#subjectConfiguration').show();
+            $('#modalSemesterId').val(semesterId);
+            
+            $('.semester-card').removeClass('border-primary');
+            $(`.semester-card[data-semester-id="${semesterId}"]`).addClass('border-primary');
+            
+            loadSubjects(semesterId);
+        }
+
+        function loadSubjects(semesterId) {
+            $.get(`/api/get_subjects/${semesterId}`, function(data) {
+                const container = $('#subjectsList');
+                container.empty();
+                
+                if (data.length === 0) {
+                    container.html('<p class="text-muted">No subjects added yet.</p>');
+                    return;
+                }
+                
+                data.forEach(function(subject) {
+                    const statusClass = subject.status === 'complete' ? 'status-complete' : 'status-incomplete';
+                    const statusIcon = subject.status === 'complete' ? 'fa-check-circle' : 'fa-exclamation-circle';
+                    
+                    container.append(`
+                        <div class="card mb-2">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">${subject.name}</h6>
+                                        <small class="text-muted">
+                                            ${subject.type} • ${subject.credits} credits
+                                            ${subject.lab_duration ? ` • ${subject.lab_duration} hours lab` : ''}
+                                        </small>
+                                        <br>
+                                        <small class="${statusClass}">
+                                            <i class="fas ${statusIcon} me-1"></i>
+                                            Teachers: ${subject.teacher_count}/${subject.section_count}
+                                        </small>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-${subject.status === 'complete' ? 'success' : 'warning'} me-2">
+                                            ${subject.status}
+                                        </span>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="removeSubject(${subject.id})" title="Remove">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+            });
+        }
+
+        function showAddSubjectModal() {
+            if (!currentSemesterId) {
+                alert('Please select a semester first');
+                return;
+            }
+            
+            $('#subjectForm')[0].reset();
+            $('#labDurationDiv').hide();
+            $('#teacherInputs').html(`
+                <div class="teacher-input mb-2">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" placeholder="Teacher Name" required>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" required>
+                                <option value="">Unavailable Day</option>
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeTeacher(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `);
+            
+            setupSubjectTypeHandler();
+            $('#addSubjectModal').modal('show');
+        }
+
+        function addTeacher() {
+            $('#teacherInputs').append(`
+                <div class="teacher-input mb-2">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" placeholder="Teacher Name" required>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" required>
+                                <option value="">Unavailable Day</option>
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeTeacher(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function removeTeacher(button) {
+            $(button).closest('.teacher-input').remove();
+        }
+
+        function removeSubject(subjectId) {
+            if (confirm('Are you sure you want to remove this subject?')) {
+                $.ajax({
+                    url: `/api/remove_subject/${subjectId}`,
+                    method: 'DELETE',
+                    success: function(response) {
+                        if (response.success) {
+                            loadSubjects(currentSemesterId);
+                        } else {
+                            alert('Error: ' + response.error);
+                        }
+                    }
+                });
+            }
+        }
+
+        function saveSubject() {
+            const teachers = [];
+            $('.teacher-input').each(function() {
+                const name = $(this).find('input').val();
+                const unavailableDay = $(this).find('select').val();
+                
+                if (name && unavailableDay) {
+                    teachers.push({
+                        name: name,
+                        unavailable_day: unavailableDay
+                    });
+                }
+            });
+            
+            if (teachers.length === 0) {
+                alert('Please add at least one teacher');
+                return;
+            }
+            
+            const data = {
+                semester_id: currentSemesterId,
+                name: $('#subjectName').val(),
+                type: $('#subjectType').val(),
+                credits: parseInt($('#subjectCredits').val()),
+                lab_duration: $('#subjectType').val() === 'practical' ? parseInt($('#labDuration').val()) : null,
+                teachers: teachers
+            };
+            
+            $.ajax({
+                url: '/api/save_subject',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    if (response.success) {
+                        $('#addSubjectModal').modal('hide');
+                        loadSubjects(currentSemesterId);
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                }
+            });
+        }
+
+        function setupSubjectTypeHandler() {
+            $('#subjectType').off('change').on('change', function() {
+                if ($(this).val() === 'practical') {
+                    $('#labDurationDiv').show();
+                } else {
+                    $('#labDurationDiv').hide();
+                }
+            });
+        }
+
+        function nextStep() {
+            $(`#step${currentStep}`).hide();
+            currentStep++;
+            $(`#step${currentStep}`).show();
+            updateProgress();
+        }
+
+        function generateTimetables() {
+            if (!departmentId) {
+                alert('No department configured');
+                return;
+            }
+            
+            $.ajax({
+                url: '/api/generate_routine_timetable',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    department_id: departmentId
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        alert(`Success! Generated ${response.pdf_count} PDF files for ${response.total_sections} sections.`);
+                        window.location.href = '/dashboard';
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                },
+                error: function() {
+                    alert('Error generating timetables');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

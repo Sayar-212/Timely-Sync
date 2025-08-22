@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Dashboard - Timely™</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f23;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ffd700;
+        }
+        
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .nav-links a {
+            color: rgba(247, 250, 252, 0.8);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 20px auto; 
+            padding: 0 16px; 
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 24px 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .welcome-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .action-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            backdrop-filter: blur(10px);
+        }
+        
+        .action-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(99, 102, 241, 0.3);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .action-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+        
+        .action-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        
+        .action-card p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+            font-size: 0.85rem;
+        }
+        
+        .recent-activity {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+        }
+        
+        .recent-activity h2 {
+            color: #ffffff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 0.9rem;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-content h4 {
+            color: #ffffff;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .activity-content p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.75rem;
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-content h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid, .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="https://lh3.googleusercontent.com/d/1LBhx-x_Si1-cmGqsRAVmheoz0tXvJ3UN" alt="HITK Logo">
+                <img src="https://lh3.googleusercontent.com/d/1gKfAWyddOwKCGFVO69ZRUh3du4E8CX9l" alt="Sync Logo">
+                Timely<sup style="font-size: 0.5em;">™</sup>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">DJ</div>
+                <span style="color: #f7fafc; font-weight: 500;">Dr. Sarah Johnson</span>
+                <div class="nav-links">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <h1 style="font-size: 1.6rem; font-weight: 600; margin-bottom: 6px;">Welcome back, Dr. Johnson!</h1>
+                <p style="font-size: 0.9rem; opacity: 0.8;">Head of Department Dashboard - Powered by Timely™</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">Active Timetables</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">45</div>
+                <div class="stat-label">Faculty Members</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-number">28</div>
+                <div class="stat-label">Subjects</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">AI Generations</div>
+            </div>
+        </div>
+
+        <div class="actions-grid">
+            <a href="/generator" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3>Generate New Timetable</h3>
+                <p>Use AI to create optimized timetables from natural language constraints</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h3>Edit Existing Timetable</h3>
+                <p>Manually modify and fine-tune your generated timetables</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <h3>Manage Faculty</h3>
+                <p>Add, edit, and manage faculty availability and preferences</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3>Analytics & Reports</h3>
+                <p>View detailed analytics and generate comprehensive reports</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <h3>Department Settings</h3>
+                <p>Configure department-wide settings and preferences</p>
+            </a>
+            
+            <a href="#" class="action-card" onclick="showPublishModal()">
+                <div class="action-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h3>Publish to Notice Board</h3>
+                <p>Publish generated timetables to student notice board</p>
+            </a>
+            
+            <a href="#" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <h3>Export Timetables</h3>
+                <p>Download timetables in various formats (PDF, Excel, CSV)</p>
+            </a>
+        </div>
+
+        <div class="recent-activity">
+            <h2>
+                <i class="fas fa-clock"></i>
+                Recent Activity
+            </h2>
+            
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>New timetable generated for CS Department</h4>
+                    <p>2 hours ago • 6 feasible solutions found</p>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Timetable modified for Prof. Smith's availability</h4>
+                    <p>5 hours ago • Manual adjustment applied</p>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>New faculty member added: Dr. Emily Chen</h4>
+                    <p>1 day ago • Machine Learning specialization</p>
+                </div>
+            </div>
+            
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Semester timetables exported to PDF</h4>
+                    <p>2 days ago • All departments included</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showPublishModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.7); display: flex; align-items: center;
+                justify-content: center; z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: #0f0f23; padding: 40px; border-radius: 20px;
+                    max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                    border: 1px solid rgba(255,255,255,0.1);
+                ">
+                    <h3 style="margin-bottom: 25px; color: #ffd700; font-size: 1.4rem;">📢 Publish Timetable</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #ffffff;">Notice Title:</label>
+                        <input type="text" id="noticeTitle" placeholder="e.g., New CSE Timetables Published" 
+                               value="New Timetables Published"
+                               style="width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.2); 
+                                      border-radius: 8px; background: rgba(255,255,255,0.05); color: #ffffff;">
+                    </div>
+                    
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 25px; line-height: 1.5;">
+                        This will publish the generated timetables to the student notice board. 
+                        Students will receive an instant notification about the update.
+                    </p>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                        <button onclick="closePublishModal()" style="
+                            padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+                            border-radius: 8px; cursor: pointer; color: #ffffff;
+                        ">Cancel</button>
+                        <button onclick="publishTimetable()" style="
+                            padding: 12px 24px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;
+                            border: none; border-radius: 8px; cursor: pointer; font-weight: 600;
+                        ">📢 Publish Now</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.getElementById('noticeTitle').focus();
+            
+            window.closePublishModal = () => {
+                document.body.removeChild(modal);
+                delete window.closePublishModal;
+                delete window.publishTimetable;
+            };
+            
+            window.publishTimetable = () => {
+                const title = document.getElementById('noticeTitle').value.trim();
+                
+                if (!title) {
+                    alert('Please enter a notice title');
+                    return;
+                }
+                
+                fetch('/publish_timetable', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title: title })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    closePublishModal();
+                    if (data.success) {
+                        alert('✅ Timetable published successfully!\n\nStudents will now see the update in their dashboard.');
+                    } else {
+                        alert('❌ Error: ' + (data.error || 'Failed to publish timetable'));
+                    }
+                })
+                .catch(e => {
+                    closePublishModal();
+                    alert('❌ Network Error: ' + e.message);
+                });
+            };
+        }
+    </script>
+</body>
+</html>

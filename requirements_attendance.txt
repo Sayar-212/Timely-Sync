@@ -1,0 +1,8 @@
+flask>=2.0.0
+sqlite3
+smtplib
+uuid
+math
+datetime
+email
+typing

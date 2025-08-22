@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - Timely™</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #f7fafc;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(26, 32, 44, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 18px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ffd700;
+        }
+        
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #38a169, #2f855a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .nav-links a {
+            color: rgba(247, 250, 252, 0.8);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(56, 161, 105, 0.2);
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .welcome-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            color: #2d3748;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(5, 1fr);
+            gap: 1px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .schedule-header {
+            background: #4a5568;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .schedule-time {
+            background: #718096;
+            color: white;
+            padding: 15px 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .schedule-cell {
+            background: white;
+            padding: 15px 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .schedule-cell.occupied {
+            background: #e6fffa;
+            border-left: 3px solid #38a169;
+        }
+        
+        .subject-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 2px;
+        }
+        
+        .class-info {
+            color: #718096;
+            font-size: 0.7rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(56, 161, 105, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .availability-status {
+            padding: 15px;
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .availability-status h4 {
+            color: #22543d;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .availability-status p {
+            color: #2f855a;
+            font-size: 0.9rem;
+        }
+        
+        .upcoming-classes {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .class-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .class-item:last-child {
+            border-bottom: none;
+        }
+        
+        .class-time {
+            background: #38a169;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .class-details {
+            flex: 1;
+        }
+        
+        .class-details h4 {
+            color: #2d3748;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .class-details p {
+            color: #718096;
+            font-size: 0.8rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #38a169;
+            color: white;
+            border-color: #38a169;
+            text-decoration: none;
+        }
+        
+        .create-attendance {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 14px 18px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .create-attendance:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .attendance-overview {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border-left: 4px solid #38a169;
+        }
+        
+        .attendance-info h4 {
+            color: #2d3748;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        
+        .attendance-info p {
+            color: #718096;
+            font-size: 0.8rem;
+        }
+        
+        .attendance-rate {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .attendance-rate.high {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .attendance-rate.medium {
+            background: #faf089;
+            color: #744210;
+        }
+        
+        .attendance-rate.low {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-content h1 {
+                font-size: 2rem;
+            }
+            
+            .schedule-grid {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="https://lh3.googleusercontent.com/d/1LBhx-x_Si1-cmGqsRAVmheoz0tXvJ3UN" alt="HITK Logo">
+                <img src="https://lh3.googleusercontent.com/d/1gKfAWyddOwKCGFVO69ZRUh3du4E8CX9l" alt="Sync Logo">
+                Timely<sup style="font-size: 0.5em;">™</sup>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">MS</div>
+                <span style="color: #f7fafc; font-weight: 500;">Prof. Michael Smith</span>
+                <div class="nav-links">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <h1 style="font-size: 2.2rem; font-weight: 600; margin-bottom: 10px;">Welcome, Prof. Smith!</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Your personalized faculty dashboard powered by Timely™</p>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="main-content">
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-calendar-week"></i>
+                        This Week's Schedule
+                    </h2>
+                    <div class="schedule-grid">
+                        <div class="schedule-header">Time</div>
+                        <div class="schedule-header">Monday</div>
+                        <div class="schedule-header">Tuesday</div>
+                        <div class="schedule-header">Wednesday</div>
+                        <div class="schedule-header">Thursday</div>
+                        <div class="schedule-header">Friday</div>
+                        
+                        <div class="schedule-time">9:00 AM</div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Mathematics</div>
+                            <div class="class-info">Room 101</div>
+                        </div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Statistics</div>
+                            <div class="class-info">Room 205</div>
+                        </div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Calculus</div>
+                            <div class="class-info">Room 102</div>
+                        </div>
+                        
+                        <div class="schedule-time">10:00 AM</div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Algebra</div>
+                            <div class="class-info">Room 103</div>
+                        </div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Mathematics</div>
+                            <div class="class-info">Room 101</div>
+                        </div>
+                        <div class="schedule-cell"></div>
+                        
+                        <div class="schedule-time">11:00 AM</div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Algebra</div>
+                            <div class="class-info">Room 103</div>
+                        </div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Statistics</div>
+                            <div class="class-info">Room 205</div>
+                        </div>
+                        
+                        <div class="schedule-time">2:00 PM</div>
+                        <div class="schedule-cell occupied">
+                            <div class="subject-name">Calculus</div>
+                            <div class="class-info">Room 102</div>
+                        </div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell"></div>
+                        <div class="schedule-cell"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-chart-bar"></i>
+                        Teaching Statistics
+                    </h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">18</div>
+                            <div class="stat-label">Classes/Week</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">Subjects</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">156</div>
+                            <div class="stat-label">Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Rooms</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-users-class"></i>
+                        Recent Attendance
+                    </h2>
+                    <div class="attendance-overview">
+                        <div class="attendance-item">
+                            <div class="attendance-info">
+                                <h4>Mathematics - Semester 3</h4>
+                                <p>Today, 9:00 AM • Room 101</p>
+                            </div>
+                            <div class="attendance-rate high">
+                                <span>92%</span>
+                            </div>
+                        </div>
+                        <div class="attendance-item">
+                            <div class="attendance-info">
+                                <h4>Statistics - Semester 5</h4>
+                                <p>Yesterday, 11:00 AM • Room 205</p>
+                            </div>
+                            <div class="attendance-rate medium">
+                                <span>78%</span>
+                            </div>
+                        </div>
+                        <div class="attendance-item">
+                            <div class="attendance-info">
+                                <h4>Calculus - Semester 2</h4>
+                                <p>2 days ago, 2:00 PM • Room 102</p>
+                            </div>
+                            <div class="attendance-rate high">
+                                <span>89%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-clock"></i>
+                        Availability Status
+                    </h2>
+                    <div class="availability-status">
+                        <h4>
+                            <i class="fas fa-check-circle"></i>
+                            Available Now
+                        </h4>
+                        <p>Next class: Mathematics at 2:00 PM</p>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button class="action-btn create-attendance" onclick="createAttendance()">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Create Attendance Session
+                        </button>
+                        <button class="action-btn" onclick="viewLastReport()" id="reportBtn" style="display:none;">
+                            <i class="fas fa-file-export"></i>
+                            Export Last Report
+                        </button>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-edit"></i>
+                            Update Availability
+                        </a>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-calendar-plus"></i>
+                            Request Time Off
+                        </a>
+                        <a href="#" class="action-btn">
+                            <i class="fas fa-bell"></i>
+                            Notification Settings
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>
+                        <i class="fas fa-list"></i>
+                        Upcoming Classes
+                    </h2>
+                    <div class="upcoming-classes">
+                        <div class="class-item">
+                            <div class="class-time">2:00 PM</div>
+                            <div class="class-details">
+                                <h4>Mathematics - Semester 3</h4>
+                                <p>Room 101 • 45 students</p>
+                            </div>
+                        </div>
+                        
+                        <div class="class-item">
+                            <div class="class-time">9:00 AM</div>
+                            <div class="class-details">
+                                <h4>Algebra - Semester 1</h4>
+                                <p>Room 103 • 38 students • Tomorrow</p>
+                            </div>
+                        </div>
+                        
+                        <div class="class-item">
+                            <div class="class-time">10:00 AM</div>
+                            <div class="class-details">
+                                <h4>Statistics - Semester 5</h4>
+                                <p>Room 205 • 42 students • Tomorrow</p>
+                            </div>
+                        </div>
+                        
+                        <div class="class-item">
+                            <div class="class-time">11:00 AM</div>
+                            <div class="class-details">
+                                <h4>Calculus - Semester 2</h4>
+                                <p>Room 102 • 31 students • Wed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function createAttendance() {
+            // Create modal for attendance form
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); display: flex; align-items: center;
+                justify-content: center; z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: white; padding: 30px; border-radius: 15px;
+                    max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                ">
+                    <h3 style="margin-bottom: 20px; color: #2d3748;">Create Attendance Session</h3>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Room Number:</label>
+                        <select id="roomInput" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="">Select a room...</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Class Format:</label>
+                        <input type="text" id="classInput" placeholder="e.g., CSE-3B" 
+                               style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <small style="color: #718096; font-size: 0.8rem;">Format: STREAM-SEMESTERSECTION (e.g., CSE-3B, ECE-2A)</small>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button onclick="closeModal()" style="
+                            padding: 10px 20px; background: #e2e8f0; border: none;
+                            border-radius: 8px; cursor: pointer;
+                        ">Cancel</button>
+                        <button onclick="submitAttendance()" style="
+                            padding: 10px 20px; background: #38a169; color: white;
+                            border: none; border-radius: 8px; cursor: pointer;
+                        ">Create Session</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Populate room dropdown
+            fetch('/api/rooms')
+                .then(r => r.json())
+                .then(rooms => {
+                    const roomSelect = document.getElementById('roomInput');
+                    rooms.forEach(room => {
+                        const option = document.createElement('option');
+                        option.value = room;
+                        option.textContent = room;
+                        roomSelect.appendChild(option);
+                    });
+                })
+                .catch(e => console.error('Error loading rooms:', e));
+            
+            document.getElementById('roomInput').focus();
+            
+            window.closeModal = () => {
+                document.body.removeChild(modal);
+                delete window.closeModal;
+                delete window.submitAttendance;
+            };
+            
+            window.submitAttendance = () => {
+                const room = document.getElementById('roomInput').value.trim();
+                const classFormat = document.getElementById('classInput').value.trim();
+                
+                if (!room || !classFormat) {
+                    alert('Please select a room and enter class format');
+                    return;
+                }
+                
+                // Validate class format
+                const formatRegex = /^[A-Z]{2,4}-\d[A-Z]$/;
+                if (!formatRegex.test(classFormat)) {
+                    alert('Invalid class format. Use: STREAM-SEMESTERSECTION (e.g., CSE-3B)');
+                    return;
+                }
+                
+                fetch('/create-attendance', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        room: room,
+                        class_format: classFormat
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    closeModal();
+                    if (data.success) {
+                        // Store session ID for report viewing
+                        localStorage.setItem('lastSessionId', data.sessionId);
+                        document.getElementById('reportBtn').style.display = 'block';
+                        
+                        alert(`✅ Attendance Session Created!\n\n` +
+                              `📧 ${data.emailsSent} emails sent to students\n` +
+                              `👥 ${data.studentsFound} students found\n` +
+                              `🏫 Class: ${data.classFormat}\n` +
+                              `📍 Room: ${room}\n\n` +
+                              `Session ID: ${data.sessionId}`);
+                    } else {
+                        alert('❌ Error: ' + (data.message || 'Failed to create attendance session'));
+                    }
+                })
+                .catch(e => {
+                    closeModal();
+                    alert('❌ Network Error: ' + e.message);
+                });
+            };
+        }
+        
+        function viewLastReport() {
+            const sessionId = localStorage.getItem('lastSessionId');
+            if (sessionId) {
+                window.open(`/attendance-report/${sessionId}`, '_blank', 'width=900,height=700');
+            } else {
+                alert('No recent attendance session found.');
+            }
+        }
+        
+        // Show report button if there's a stored session
+        if (localStorage.getItem('lastSessionId')) {
+            document.getElementById('reportBtn').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance - Timely™</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .attendance-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .session-info {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .session-info h2 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .session-info p {
+            color: #718096;
+            margin-bottom: 5px;
+        }
+        
+        .location-section {
+            margin-bottom: 30px;
+        }
+        
+        .location-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .location-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .location-status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .location-status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .location-status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #feb2b2;
+        }
+        
+        .location-status.info {
+            background: #bee3f8;
+            color: #2a4365;
+            border: 1px solid #90cdf4;
+        }
+        
+        .mark-btn {
+            background: #38a169;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        
+        .mark-btn:hover {
+            background: #2f855a;
+            transform: translateY(-2px);
+        }
+        
+        .mark-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .distance-info {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+        
+        .error-message {
+            color: #e53e3e;
+            margin-top: 20px;
+            padding: 15px;
+            background: #fed7d7;
+            border-radius: 10px;
+            border: 1px solid #feb2b2;
+        }
+        
+        .success-message {
+            color: #22543d;
+            margin-top: 20px;
+            padding: 15px;
+            background: #c6f6d5;
+            border-radius: 10px;
+            border: 1px solid #9ae6b4;
+        }
+    </style>
+</head>
+<body>
+    <div class="attendance-container">
+        <div class="logo">
+            <i class="fas fa-map-marker-alt"></i>
+            Timely<sup style="font-size: 0.5em;">™</sup> Attendance
+        </div>
+        
+        <div class="session-info">
+            <h2>{{ session.class_name }}</h2>
+            <p><i class="fas fa-door-open"></i> Room: {{ session.room }}</p>
+            <p><i class="fas fa-clock"></i> Session started at {{ session.created_at }}</p>
+        </div>
+        
+        <div class="location-section">
+            <button class="location-btn" onclick="getLocation()" id="locationBtn">
+                <i class="fas fa-crosshairs"></i>
+                Get My Location
+            </button>
+            
+            <div id="locationStatus" class="location-status" style="display: none;"></div>
+            
+            <button class="mark-btn" onclick="markAttendance()" id="markBtn">
+                <i class="fas fa-check"></i>
+                Mark Attendance
+            </button>
+        </div>
+        
+        <div class="distance-info">
+            <i class="fas fa-info-circle"></i>
+            You must be within {{ session.radius }}m of the classroom to mark attendance.
+        </div>
+        
+        <div id="resultMessage" style="display: none;"></div>
+    </div>
+
+    <script>
+        let userLocation = null;
+        const sessionId = '{{ session_id }}';
+        const studentEmail = new URLSearchParams(window.location.search).get('email');
+        
+        function getLocation() {
+            const btn = document.getElementById('locationBtn');
+            const status = document.getElementById('locationStatus');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> Getting Location...';
+            
+            if (!navigator.geolocation) {
+                showLocationStatus('Geolocation is not supported by this browser.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-crosshairs"></i> Get My Location';
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    userLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    };
+                    
+                    showLocationStatus(
+                        `Location obtained! Accuracy: ±${Math.round(userLocation.accuracy)}m`, 
+                        'success'
+                    );
+                    
+                    btn.style.display = 'none';
+                    document.getElementById('markBtn').style.display = 'inline-block';
+                },
+                function(error) {
+                    let message = 'Unable to get location. ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message += 'Location access denied by user.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message += 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            message += 'Location request timed out.';
+                            break;
+                        default:
+                            message += 'Unknown error occurred.';
+                            break;
+                    }
+                    
+                    showLocationStatus(message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs"></i> Get My Location';
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0  // Force fresh location reading
+                }
+            );
+        }
+        
+        function showLocationStatus(message, type) {
+            const status = document.getElementById('locationStatus');
+            status.textContent = message;
+            status.className = `location-status ${type}`;
+            status.style.display = 'block';
+        }
+        
+        function markAttendance() {
+            if (!userLocation) {
+                alert('Please get your location first.');
+                return;
+            }
+            
+            const btn = document.getElementById('markBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> Marking Attendance...';
+            
+            fetch('/api/mark-attendance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    latitude: userLocation.latitude,
+                    longitude: userLocation.longitude,
+                    email: studentEmail
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('resultMessage');
+                
+                if (data.success) {
+                    resultDiv.className = 'success-message';
+                    resultDiv.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Success!</strong><br>
+                        ${data.message}<br>
+                        <small>Distance from classroom: ${data.distance}m (Required: ≤${data.required_distance}m)</small>
+                    `;
+                    btn.style.display = 'none';
+                } else {
+                    resultDiv.className = 'error-message';
+                    resultDiv.innerHTML = `
+                        <i class="fas fa-exclamation-circle"></i>
+                        <strong>Error:</strong><br>
+                        ${data.message}
+                    `;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Mark Attendance';
+                }
+                
+                resultDiv.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const resultDiv = document.getElementById('resultMessage');
+                resultDiv.className = 'error-message';
+                resultDiv.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <strong>Network Error:</strong><br>
+                    Unable to mark attendance. Please try again.
+                `;
+                resultDiv.style.display = 'block';
+                
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Mark Attendance';
+            });
+        }
+        
+        // Auto-refresh page if session expires (30 minutes)
+        setTimeout(() => {
+            location.reload();
+        }, 30 * 60 * 1000);
+    </script>
+</body>
+</html>

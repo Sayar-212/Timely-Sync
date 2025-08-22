@@ -1,0 +1,51 @@
+{
+  "class_name": "Class A",
+  "days": [
+    "Mon",
+    "Tue",
+    "Wed"
+  ],
+  "slot_names": [
+    "S1",
+    "S2",
+    "S3"
+  ],
+  "assignments": [
+    {
+      "day": "Mon",
+      "slot": "S1",
+      "subject_id": "Eng",
+      "teacher_id": "Iyer"
+    },
+    {
+      "day": "Mon",
+      "slot": "S2",
+      "subject_id": "Math",
+      "teacher_id": "Sharma"
+    },
+    {
+      "day": "Mon",
+      "slot": "S3",
+      "subject_id": "Eng",
+      "teacher_id": "Iyer"
+    },
+    {
+      "day": "Tue",
+      "slot": "S1",
+      "subject_id": "Math",
+      "teacher_id": "Sharma"
+    },
+    {
+      "day": "Tue",
+      "slot": "S3",
+      "subject_id": "Sci",
+      "teacher_id": "Rao"
+    },
+    {
+      "day": "Wed",
+      "slot": "S1",
+      "subject_id": "Sci",
+      "teacher_id": "Rao"
+    }
+  ]
+}

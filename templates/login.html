@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Timely</title>
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1gKfAWyddOwKCGFVO69ZRUh3du4E8CX9l">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #2d1b69 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            color: #e6e6e6;
+        }
+
+
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.8);
+
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 18px;
+            padding: 45px 36px;
+            width: 90%;
+            max-width: 405px;
+            box-shadow: 0 18px 54px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 2;
+
+        }
+
+
+
+        .logo {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 13.5px;
+            margin-bottom: 13.5px;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #d4af37;
+            letter-spacing: 3px;
+
+            margin: 0;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+
+        }
+
+        .logo p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .logo .subtitle {
+            font-size: 0.9rem;
+            color: rgba(212, 175, 55, 0.8);
+            font-style: italic;
+        }
+
+
+
+        .google-btn {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 13.5px;
+        }
+
+        .google-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 22.5px 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .divider span {
+            padding: 0 15px;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 22.5px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7.2px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(212, 175, 55, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e6e6e6;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            color: #0d1117;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #e6c547, #c9a526);
+        }
+
+        .error {
+            background: rgba(220, 38, 38, 0.2);
+            color: #fca5a5;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            border-left: 4px solid #dc2626;
+        }
+
+
+
+        .back-link {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .back-link a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #b8941f;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 40px 30px;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-container">
+                <img src="https://lh3.googleusercontent.com/d/1LBhx-x_Si1-cmGqsRAVmheoz0tXvJ3UN" alt="HITK Logo">
+                <img src="https://lh3.googleusercontent.com/d/1gKfAWyddOwKCGFVO69ZRUh3du4E8CX9l" alt="Sync Logo">
+                <h1>Timely<sup style="font-size: 0.4em;">™</sup></h1>
+            </div>
+
+        </div>
+
+        {% if error %}
+        <div class="error">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <button class="google-btn" onclick="signInWithGoogle()">
+            <svg class="google-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <div class="divider">
+            <span>or sign in with email</span>
+        </div>
+
+        <form id="emailForm" onsubmit="event.preventDefault(); signInWithEmail();">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <input type="text" id="email" placeholder="Enter your email" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="/">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAIxKZWGoA7ENZX8I08_94VnGojq5-aQhQ",
+            authDomain: "timely-27c0d.firebaseapp.com",
+            projectId: "timely-27c0d",
+            storageBucket: "timely-27c0d.firebasestorage.app",
+            messagingSenderId: "388202339098",
+            appId: "1:388202339098:web:04759866f0a7f1238caaa3",
+            measurementId: "G-0TC33Y41XG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        window.signInWithGoogle = async function() {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                if (!user.email.endsWith('@heritageit.edu.in') && !user.email.endsWith('@heritageit.edu')) {
+                    await auth.signOut();
+                    alert('Access denied. Only @heritageit.edu or @heritageit.edu.in emails are allowed.');
+                    return;
+                }
+                
+                fetch('/auth/callback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: { email: user.email, user_metadata: { full_name: user.displayName } } })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) window.location.href = data.redirect;
+                    else alert('Login failed: ' + data.error);
+                });
+            } catch (error) {
+                alert('Google sign-in failed: ' + error.message);
+            }
+        };
+
+        window.signInWithEmail = async function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            // Demo faculty credentials - redirect to configure
+            if (email === 'fac' && password === 'fac123') {
+                window.location.href = '/configure';
+                return;
+            }
+            
+            if (!email.includes('@') || (!email.endsWith('@heritageit.edu.in') && !email.endsWith('@heritageit.edu'))) {
+                alert('Access denied. Only @heritageit.edu or @heritageit.edu.in emails are allowed.');
+                return;
+            }
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                fetch('/auth/callback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: { email: user.email, user_metadata: { full_name: user.displayName || email.split('@')[0] } } })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) window.location.href = data.redirect;
+                    else alert('Login failed: ' + data.error);
+                });
+            } catch (error) {
+                alert('Email sign-in failed: ' + error.message);
+            }
+        };
+    </script>
+</body>
+</html>

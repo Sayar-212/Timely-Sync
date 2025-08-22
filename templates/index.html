@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Timetable Generator</title>
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1gKfAWyddOwKCGFVO69ZRUh3du4E8CX9l">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #2c3e50; margin-bottom: 10px; }
+        .header p { color: #7f8c8d; }
+        .card { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; }
+        textarea { width: 100%; min-height: 200px; padding: 15px; border: 2px solid #ecf0f1; border-radius: 8px; font-size: 14px; resize: vertical; }
+        textarea:focus { outline: none; border-color: #3498db; }
+        .btn { background: #3498db; color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; }
+        .btn:hover { background: #2980b9; }
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .loading { display: none; text-align: center; margin: 20px 0; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .result { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .download-links { margin-top: 15px; }
+        .download-links a { display: inline-block; margin-right: 15px; padding: 8px 16px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px; }
+        .download-links a:hover { background: #229954; }
+        .examples { margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .examples h3 { margin-bottom: 10px; color: #2c3e50; }
+        .examples ul { list-style-type: none; }
+        .examples li { margin-bottom: 5px; color: #6c757d; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 AI Timetable Generator</h1>
+            <p>Multi-Agent System with Constraint Satisfaction & Semantic Verification</p>
+        </div>
+        
+        <div class="card">
+            <form id="timetableForm">
+                <div class="form-group">
+                    <label for="constraints">Natural Language Constraints:</label>
+                    <textarea id="constraints" placeholder="Enter your timetable constraints in natural language, one per line...
+
+Example:
+Prof. Sharma is only available on Mon S1,S2, Tue S1
+Math taught by Prof. Sharma needs 2 periods
+Sci taught by Prof. Rao needs 2 periods
+Eng taught by Prof. Iyer needs 2 periods
+Prefer Math on Mon:S1, Tue:S1"></textarea>
+                </div>
+                
+                <button type="submit" class="btn" id="generateBtn">Generate Timetable</button>
+            </form>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Generating timetable... This may take a few seconds.</p>
+            </div>
+            
+            <div class="result" id="result"></div>
+            
+            <div class="examples">
+                <h3>Example Constraints:</h3>
+                <ul>
+                    <li>• Prof. [Name] is only available on [Day] [Slots]</li>
+                    <li>• [Subject] taught by Prof. [Name] needs [X] periods</li>
+                    <li>• Prefer [Subject] on [Day]:[Slot], [Day]:[Slot]</li>
+                    <li>• No classes after 3 PM</li>
+                    <li>• Math and Science should not be consecutive</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('timetableForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const constraints = document.getElementById('constraints').value.trim();
+            if (!constraints) {
+                alert('Please enter some constraints');
+                return;
+            }
+            
+            const generateBtn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            
+            // Show loading state
+            generateBtn.disabled = true;
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ constraints: constraints })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.className = 'result success';
+                    result.innerHTML = `
+                        <h3>✅ ${data.message}</h3>
+                        <div class="download-links">
+                            <a href="/download/timetable.pdf" target="_blank">📄 Download PDF</a>
+                            <a href="/download/timetable.json" target="_blank">📋 Download JSON</a>
+                        </div>
+                        ${data.verification.warnings && data.verification.warnings.length > 0 ? 
+                            `<p><strong>Warnings:</strong> ${data.verification.warnings.join(', ')}</p>` : ''}
+                    `;
+                } else {
+                    result.className = 'result error';
+                    result.innerHTML = `<h3>❌ Error</h3><p>${data.error}</p>`;
+                }
+                
+            } catch (error) {
+                result.className = 'result error';
+                result.innerHTML = `<h3>❌ Error</h3><p>Failed to generate timetable: ${error.message}</p>`;
+            } finally {
+                generateBtn.disabled = false;
+                loading.style.display = 'none';
+                result.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
